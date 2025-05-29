@@ -1,16 +1,15 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white py-4">
-      <div className="container mx-auto text-center">
-        <p>
-          &copy; {new Date().getFullYear()} Your Company Name. All rights
-          reserved.
+    <footer className="bg-gray-800 text-white p-4 h-[100px]">
+      <div className="text-center justify-center items-center h-full w-full">
+        <p className="flexjustify-center items-center">
+          &copy; {new Date().getFullYear()} Side Project.
         </p>
-        <p>
+        <p className="flex justify-center items-center">
           <a href="/privacy-policy" className="text-gray-400 hover:text-white">
             Privacy Policy
           </a>{" "}
-          |
+          |{" "}
           <a
             href="/terms-of-service"
             className="text-gray-400 hover:text-white"

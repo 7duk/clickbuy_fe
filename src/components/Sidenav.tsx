@@ -2,16 +2,16 @@ import type { SidenavProps } from "../types/components/SidenavProps";
 
 const Sidenav: React.FC<SidenavProps> = ({ isAuth, isLogin }) => {
   return (
-    <div className="bg-gray-800 text-white w-full h-full">
+    <div className="text-white w-full h-full">
       <nav className="flex flex-row">
         <ul className="list-none grid grid-flow-col w-3/4 justify-start">
           {!isLogin ? (
             <>
-              <li className="p-2 hover:bg-red-700 me-2">
-                <a href="">Home</a>
+              <li className="p-2 hover:underline hover:text-gray-800 transition-transform duration-300 hover:scale-150 me-2">
+                <a href="/home">Home</a>
               </li>
-              <li className="p-2 hover:bg-red-700 me-2">
-                <a href="">Contact</a>
+              <li className="p-2 hover:underline hover:text-gray-800 transition-transform duration-300 hover:scale-150 me-2">
+                <a href="/about">About</a>
               </li>
             </>
           ) : (
@@ -22,15 +22,15 @@ const Sidenav: React.FC<SidenavProps> = ({ isAuth, isLogin }) => {
         <ul className="list-none grid grid-flow-col w-1/4 justify-end">
           {!isAuth ? (
             <>
-              <li className="p-2 hover:bg-red-700 me-2">
+              <li className="p-2 hover:underline hover:text-gray-800 transition-transform duration-300 hover:scale-150 me-2">
                 <a href="/signin">Sign In</a>
               </li>
-              <li className="p-2 hover:bg-red-700 me-2">
+              {/* <li className="p-2 hover:bg-gray-700 me-2">
                 <a href="">Sign Up</a>
-              </li>
+              </li> */}
             </>
           ) : (
-            <li className="p-2 hover:bg-red-700 me-2">
+            <li className="p-2 hover:underline hover:text-gray-800 transition-transform duration-300 hover:scale-150 me-2">
               <a href="">Logout</a>
             </li>
           )}
