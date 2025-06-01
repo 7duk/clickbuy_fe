@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import { AppProvider } from "./context/AppContext";
 import "./index.css";
@@ -7,6 +8,7 @@ function App() {
   return (
     <AppProvider>
       <AppRoutes />
+      <ToastContainer />
     </AppProvider>
   );
 }
