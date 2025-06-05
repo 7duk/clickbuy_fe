@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-white p-4 h-[100px]">
+    <footer className="bg-gray-800 text-white p-4">
       <div className="text-center justify-center items-center h-full w-full">
         <p className="flexjustify-center items-center">
           &copy; {new Date().getFullYear()} Side Project.

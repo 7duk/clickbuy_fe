@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useLogin } from "../../hooks/useLogin";
+import { useLogin } from "../../hooks/useAuth";
 import type { LoginRequest } from "../../api/authApi";
 import { Spinner } from "../../components/Spiner";
 

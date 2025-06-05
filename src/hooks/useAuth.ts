@@ -1,5 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { login, type LoginRequest, type LoginResponse } from "../api/authApi";
+import {
+  login,
+  logout,
+  type LoginRequest,
+  type LoginResponse,
+} from "../api/authApi";
 import type { ApiResponse } from "../helpers/data";
 import type { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -23,8 +28,16 @@ export const useLogin = () => {
     onSuccess: (data) => {
       toast.success(data.message || "login successful");
       localStorage.setItem("access_token", data.data?.access_token || "");
+      localStorage.setItem("user_id", data.data?.id || "");
       setIsAuth(true);
       navigate("/home", { replace: true });
     },
+  });
+};
+
+export const useLogout = () => {
+  return useMutation<ApiResponse<null>, Error>({
+    mutationKey: ["logout"],
+    mutationFn: logout,
   });
 };

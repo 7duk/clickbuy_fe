@@ -7,6 +7,9 @@ import useAppContext from "../hooks/useAppContext";
 import SignUp from "../pages/signup";
 import { useEffect } from "react";
 import { NotFound } from "../pages/notfound";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import InfoPage from "../pages/info";
 
 const AppRoutes = () => {
   const { isAuth, setIsAuth } = useAppContext();
@@ -24,23 +27,35 @@ const AppRoutes = () => {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout isAuth={isAuth} />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-        
-        <Route
-          path="/signin"
-          element={isAuth ? <Navigate to="/home" replace /> : <SignIn />}
-        />
-        <Route
-          path="/signup"
-          element={isAuth ? <Navigate to="/home" replace /> : <SignUp />}
-        />
-      </Routes>
+      <div className="h-screen bg-white relative flex flex-col overflow-hidden">
+        <Header />
+        <Routes>
+          {/* Routes for authenticated users */}
+          <Route
+            element={
+              !isAuth ? <Navigate to="/signin" replace /> : <MainLayout />
+            }
+          >
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/info" element={<InfoPage />} />
+            <Route path="/info/:id" element={<InfoPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+
+          {/* Authentication routes */}
+          <Route
+            path="/signin"
+            element={isAuth ? <Navigate to="/home" replace /> : <SignIn />}
+          />
+          <Route
+            path="/signup"
+            element={isAuth ? <Navigate to="/home" replace /> : <SignUp />}
+          />
+        </Routes>
+        <Footer />
+      </div>
     </BrowserRouter>
   );
 };

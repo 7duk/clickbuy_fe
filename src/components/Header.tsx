@@ -1,16 +1,21 @@
 import React from "react";
 import Sidenav from "./Sidenav";
 import { Link } from "react-router-dom";
-import type { SidenavProps } from "../types/components/SidenavProps";
 
-const Header: React.FC<SidenavProps> = ({ isAuth }) => {
+const Header: React.FC = () => {
   return (
-    <header className="sticky top-0flex bg-blue-500 text-white p-4">
+    <header className="sticky top-0 flex bg-blue-500 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-lg font-bold w-[200px]">
-          <Link to={"/"}>App</Link>
+          <Link to={"/"}>
+            <img
+              src="./public/startup-rocket-svgrepo-com.svg"
+              alt="Projects"
+              className="h-8 w-8"
+            />
+          </Link>
         </div>
-        <Sidenav isAuth={isAuth} />
+        <Sidenav />
       </div>
     </header>
   );

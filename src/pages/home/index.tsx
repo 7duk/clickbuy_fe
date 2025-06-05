@@ -9,7 +9,7 @@ const HomePage = () => {
   }, [setIsLogin]);
 
   return (
-    <div>
+    <div className="flex flex-col w-full h-full items-center justify-center">
       <h1>Home Page</h1>
       <p>Welcome to the home page!</p>
     </div>

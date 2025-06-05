@@ -27,3 +27,14 @@ export const login = async (
   );
   return response.data;
 };
+
+export const logout = async (): Promise<ApiResponse<null>> => {
+  const response = await axiosClient.post<ApiResponse<null>>(
+    "/auth/logout",
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};
