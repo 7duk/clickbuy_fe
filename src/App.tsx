@@ -8,7 +8,7 @@ function App() {
   return (
     <AppProvider>
       <AppRoutes />
-      <ToastContainer />
+      <ToastContainer position="bottom-right" />
     </AppProvider>
   );
 }

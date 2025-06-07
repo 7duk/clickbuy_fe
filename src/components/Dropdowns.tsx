@@ -20,7 +20,7 @@ export default function Dropdowns() {
     });
   };
   return (
-    <Menu as="div" className="relative inline-block text-left">
+    <Menu as="div" className="relative inline-block text-left ">
       <div className="items-center flex">
         <MenuButton className="inline-flex justify-center">
           <CircleUser />
@@ -29,13 +29,13 @@ export default function Dropdowns() {
 
       <MenuItems
         transition
-        className="absolute right-0 z-10 w-56 mt-1 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+        className="absolute right-0 z-10 w-56 mt-1 origin-top-right rounded-md bg-slate-500 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
       >
         <div className="py-1">
           <MenuItem>
             <Link
               to={`/info/${userID}`}
-              className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+              className="block px-4 py-2 text-sm text-white data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden hover:!text-blue-500"
             >
               Account settings
             </Link>
@@ -44,7 +44,7 @@ export default function Dropdowns() {
             <button
               type="button"
               onClick={handleLogout}
-              className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+              className="block w-full px-4 py-2 text-left text-sm text-white data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden hover:!text-blue-500"
             >
               Sign out
             </button>

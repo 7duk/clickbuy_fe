@@ -10,6 +10,8 @@ import { NotFound } from "../pages/notfound";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import InfoPage from "../pages/info";
+import ProductPage from "../pages/product";
+import ProductDetailPage from "../pages/product/detail";
 
 const AppRoutes = () => {
   const { isAuth, setIsAuth } = useAppContext();
@@ -38,9 +40,13 @@ const AppRoutes = () => {
           >
             <Route path="/" element={<HomePage />} />
             <Route path="/home" element={<HomePage />} />
+            <Route path="/product" element={<ProductPage />} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/info" element={<InfoPage />} />
             <Route path="/info/:id" element={<InfoPage />} />
+            <Route path="/cart" element={<div>Cart</div>} />
+            <Route path="/favorites" element={<div>Favorites</div>} />
             <Route path="*" element={<NotFound />} />
           </Route>
 
