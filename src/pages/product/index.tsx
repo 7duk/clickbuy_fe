@@ -1,27 +1,28 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Heart, ShoppingCart } from "lucide-react";
 import itemDefaultImg from "../../assets/items-default-avt/default.jpg";
 import Pagination from "../../components/Pagination";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetCategory } from "../../hooks/useCategory";
 import { useGetItems } from "../../hooks/useItem";
 import type { CategoryResponse } from "../../api/categoryApi";
 import type { Item, ItemPageable } from "../../api/itemApi";
 import type { ApiResponse } from "../../helpers/data";
+import { Spinner } from "../../components/Spiner";
 
 const ProductPage = () => {
-  const [price, setPrice] = useState(500);
-  const [priceType, setPriceType] = useState<"less" | "greater">("less");
-  const [showCategories, setShowCategories] = useState(false);
+  const [price, setPrice] = useState<number | undefined>(undefined);
+  const [priceType, setPriceType] = useState<
+    "less_than" | "greater_than" | undefined
+  >(undefined);
+  const [showCategories, setShowCategories] = useState(true);
   const [showPrice, setShowPrice] = useState(false);
-  const [showSort, setShowSort] = useState(false);
+  const [showSort, setShowSort] = useState(true);
 
   const [page, setPage] = useState(1);
   const [size] = useState(10);
-  const [sort, setSort] = useState<string | undefined>(undefined);
-  const [direction, setDirection] = useState<"asc" | "desc" | undefined>(
-    undefined
-  );
+  const [sort, setSort] = useState<string>("createdAt");
+  const [direction, setDirection] = useState<"asc" | "desc">("desc");
   const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
   const { data: categories } = useGetCategory();
   const { isLoading, data: items } = useGetItems({
@@ -30,13 +31,25 @@ const ProductPage = () => {
     sort,
     direction,
     category_ids: categoryId,
+    price: price,
+    price_comparision: priceType,
   }) as { isLoading: boolean; data: ApiResponse<ItemPageable<Item>> };
+
+  useEffect(() => {
+    if (showPrice) {
+      setPrice(10000000);
+      setPriceType("less_than");
+    } else {
+      setPrice(undefined);
+      setPriceType(undefined);
+    }
+  }, [showPrice]);
   return (
-    <div className="flex flex-col md:flex-row items-start justify-center h-screen overflow-y-auto">
+    <div className="flex flex-col md:flex-row items-start justify-start h-screen overflow-y-auto">
       <div className="flex flex-col h-auto w-full md:w-1/5 items-center justify-start p-2 md:h-full">
         <div className="flex flex-col w-full p-2 md:mt-6">
           <div
-            className="cursor-pointer flex gap-2"
+            className="cursor-pointer flex gap-2 hover:bg-gray-50 w-fit p-1 rounded-md"
             onClick={() => setShowCategories(!showCategories)}
           >
             <h3 className="text-start font-medium">Categories</h3>
@@ -47,7 +60,7 @@ const ProductPage = () => {
               {categories?.data?.map((category: CategoryResponse) => (
                 <li
                   key={category.category_id}
-                  className="p-2 hover:bg-slate-200 gap-2 flex items-center justify-start"
+                  className="p-2 hover:bg-slate-50 gap-2 flex items-center justify-start"
                 >
                   <input
                     type="checkbox"
@@ -86,7 +99,7 @@ const ProductPage = () => {
         </div>
         <div className="flex flex-col w-full p-2">
           <div
-            className="cursor-pointer flex gap-2"
+            className="cursor-pointer flex gap-2  hover:bg-gray-50 w-fit p-1 rounded-md"
             onClick={() => setShowPrice(!showPrice)}
           >
             <h3 className="text-start font-medium">Price</h3>
@@ -94,42 +107,74 @@ const ProductPage = () => {
           </div>
           {showPrice ? (
             <>
-              <div className="flex justify-center p-2">
-                <input
-                  className="w-4/5"
-                  type="range"
-                  min="0"
-                  max="1000"
-                  step="100"
-                  value={price}
-                  onChange={(e) =>
-                    setPrice(e.target.value as unknown as number)
-                  }
-                />
-              </div>
+              <div className="p-2 space-y-4">
+                {/* Price Range Display */}
+                <div className="flex justify-between items-center w-full mx-auto text-sm">
+                  <span className="font-medium">Range:</span>
+                  <span className="text-blue-600 font-medium">
+                    {Number(price).toLocaleString()} VND
+                  </span>
+                </div>
 
-              <div className="flex flex-row gap-3 justify-center p-2">
-                <div className="flex flex-row gap-2">
-                  <span className="font-normal text-sm">Less</span>
+                {/* Slider */}
+                <div className="flex justify-center">
                   <input
-                    type="radio"
-                    name="priceType"
-                    id="less"
-                    value="less"
-                    checked={priceType === "less"}
-                    onChange={() => setPriceType("less")}
+                    className="w-full appearance-none h-2 rounded-lg bg-gray-200 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:shadow-md"
+                    type="range"
+                    min="1000000"
+                    max="50000000"
+                    step="5000000"
+                    value={price}
+                    onChange={(e) =>
+                      setPrice(e.target.value as unknown as number)
+                    }
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${
+                        (((price ?? 1000000) - 1000000) /
+                          (50000000 - 1000000)) *
+                        100
+                      }%, #e5e7eb ${
+                        (((price ?? 1000000) - 1000000) /
+                          (50000000 - 1000000)) *
+                        100
+                      }%, #e5e7eb 100%)`,
+                    }}
                   />
                 </div>
-                <div className="flex flex-row gap-2">
-                  <span className="font-normal text-sm">Greater</span>
-                  <input
-                    type="radio"
-                    name="priceType"
-                    id="greater"
-                    value="greater"
-                    checked={priceType === "greater"}
-                    onChange={() => setPriceType("greater")}
-                  />
+
+                {/* Min/Max Values */}
+                <div className="flex justify-between w-full text-xs text-gray-500">
+                  <span>1M VND</span>
+                  <span>50M VND</span>
+                </div>
+
+                {/* Comparison Type */}
+                <div className="mt-2">
+                  <div className="text-sm font-medium mb-2">
+                    Price Comparison:
+                  </div>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="priceType"
+                        className="accent-blue-500 h-4 w-4"
+                        checked={priceType === "less_than"}
+                        onChange={() => setPriceType("less_than")}
+                      />
+                      <span className="text-sm">Less than</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="priceType"
+                        className="accent-blue-500 h-4 w-4"
+                        checked={priceType === "greater_than"}
+                        onChange={() => setPriceType("greater_than")}
+                      />
+                      <span className="text-sm">Greater than</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </>
@@ -139,108 +184,134 @@ const ProductPage = () => {
         </div>
         <div className="flex flex-col w-full p-2">
           <div
-            className="cursor-pointer flex gap-2"
+            className="cursor-pointer flex gap-2  hover:bg-gray-50 w-fit p-1 rounded-md"
             onClick={() => setShowSort(!showSort)}
           >
             <h3 className="text-start font-medium">Sort</h3>
             {showSort ? <ChevronUp /> : <ChevronDown />}
           </div>
           {showSort ? (
-            <ul className="list-none">
-              <li className="p-2 hover:bg-slate-200 gap-2 flex items-center justify-start">
-                <input
-                  type="checkbox"
-                  name="category-1"
-                  id="category-1"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSort("create_at");
-                      setDirection("desc");
-                    }
-                  }}
-                />
-                <p className="text-start font-normal text-sm">Newest</p>
-              </li>
-              <li className="p-2 hover:bg-slate-200 gap-2 flex items-center justify-start">
-                <input
-                  type="checkbox"
-                  name="category-1"
-                  id="category-1"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSort("public_price");
-                      setDirection("asc");
-                    }
-                  }}
-                />
-                <p className="text-start font-normal text-sm">
-                  Price: Low to high
-                </p>
-              </li>
-              <li className="p-2 hover:bg-slate-200 gap-2 flex items-center justify-start">
-                <input
-                  type="checkbox"
-                  name="category-1"
-                  id="category-1"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSort("public_price");
-                      setDirection("desc");
-                    }
-                  }}
-                />
-                <p className="text-start font-normal text-sm">
-                  Price: High to low
-                </p>
-              </li>
-            </ul>
+            <div className="p-2 space-y-1">
+              <ul className="list-none">
+                <li className="p-2 hover:bg-slate-50 rounded-md flex items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer w-full">
+                    <input
+                      type="radio"
+                      name="sortOption"
+                      id="sort-newest"
+                      className="accent-blue-500 h-4 w-4"
+                      checked={sort === "createdAt" && direction === "desc"}
+                      onChange={() => {
+                        setSort("createdAt");
+                        setDirection("desc");
+                      }}
+                    />
+                    <span className="text-sm">Newest</span>
+                  </label>
+                </li>
+                <li className="p-2 hover:bg-slate-50 rounded-md flex items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer w-full">
+                    <input
+                      type="radio"
+                      name="sortOption"
+                      id="sort-price-asc"
+                      className="accent-blue-500 h-4 w-4"
+                      checked={sort === "publicPrice" && direction === "asc"}
+                      onChange={() => {
+                        setSort("publicPrice");
+                        setDirection("asc");
+                      }}
+                    />
+                    <span className="text-sm">Price: Low to high</span>
+                  </label>
+                </li>
+                <li className="p-2 hover:bg-slate-50 rounded-md flex items-center gap-2">
+                  <label className="flex items-center gap-2 cursor-pointer w-full">
+                    <input
+                      type="radio"
+                      name="sortOption"
+                      id="sort-price-desc"
+                      className="accent-blue-500 h-4 w-4"
+                      checked={sort === "publicPrice" && direction === "desc"}
+                      onChange={() => {
+                        setSort("publicPrice");
+                        setDirection("desc");
+                      }}
+                    />
+                    <span className="text-sm">Price: High to low</span>
+                  </label>
+                </li>
+              </ul>
+            </div>
           ) : (
             <></>
           )}
         </div>
       </div>
       {!isLoading ? (
-        <div className="flex flex-col w-full md:w-4/5 overflow-y-auto">
-          <div className="flex flex-col md:grid md:grid-cols-5 gap-4 p-4 ">
-            {items?.data?.content.map((item) => (
-              <div
-                className="flex flex-col items-center justify-between bg-white shadow-md rounded-lg p-4 border border-slate-200"
-                key={item.id}
-              >
-                <Link to={`/product/${item.id}`}>
-                  <img
-                    src={item.images[0]?.image_link || itemDefaultImg}
-                    key={item.images[0]?.image_id}
-                    className="w-[150px] h-[150px] object-cover rounded-md mb-2 hover:scale-105 transition-transform duration-300"
-                  />
-                </Link>
-                <h3 className="flex justify-start h-full">
+        items?.data?.content.length !== 0 ? (
+          <div className="flex flex-col w-full md:w-4/5 overflow-y-auto">
+            <div className="flex flex-col md:grid md:grid-cols-5 gap-4 p-4 ">
+              {items?.data?.content.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col"
+                >
                   <Link
                     to={`/product/${item.id}`}
-                    className="font-bold hover:text-blue-500 break-keep"
+                    className="block relative overflow-hidden"
                   >
-                    {item.item_name}
+                    <img
+                      src={item.images[0]?.image_link || itemDefaultImg}
+                      alt={item.item_name}
+                      className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-2 right-2  text-white text-xs font-medium px-2 py-1  flex flex-row gap-2">
+                      <div className="cursor-pointer p-2 rounded-full bg-gray-500 hover:bg-gray-100 hover:text-gray-800">
+                        <Heart />
+                      </div>
+                      <div className="cursor-pointer p-2 rounded-full bg-gray-500 hover:bg-gray-100 hover:text-gray-800">
+                        <ShoppingCart />
+                      </div>
+                    </div>
                   </Link>
-                </h3>
-                <div className="flex flex-row justify-end gap-4">
-                  <span className="font-bold text-xs cursor-default">
-                    {item.public_price.toLocaleString()} VND
-                  </span>
+                  <div className="p-4 flex flex-col flex-grow">
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="block flex-grow"
+                    >
+                      <h3 className="font-medium text-gray-800 hover:text-blue-600 transition-colors line-clamp-2 mb-2">
+                        {item.item_name}
+                      </h3>
+                    </Link>
+                    <div className="flex justify-between items-center mt-auto">
+                      <span className="font-bold text-center w-full">
+                        {item.public_price.toLocaleString()} VND
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <Pagination
+              currentPage={page}
+              size={size}
+              numberOfElements={items.data?.numberOfElements ?? 0}
+              totalElements={items.data?.totalElements ?? 0}
+              totalPages={items.data?.totalPages ?? 0}
+              onPageChange={(newPage) => setPage(newPage)}
+            />
           </div>
-          <Pagination
-            currentPage={page}
-            size={size}
-            numberOfElements={items.data?.numberOfElements ?? 0}
-            totalElements={items.data?.totalElements ?? 0}
-            totalPages={items.data?.totalPages ?? 0}
-            onPageChange={(newPage) => setPage(newPage)}
-          />
-        </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full h-full gap-10">
+            <h2 className="text-center text-xl mt-10">No products found</h2>
+          </div>
+        )
       ) : (
-        <></>
+        <div className="flex flex-col items-center justify-center w-full h-full gap-10">
+          <h2 className="text-center text-xl mt-10">Loading products...</h2>
+          <Spinner />
+        </div>
       )}
     </div>
   );

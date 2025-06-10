@@ -28,18 +28,33 @@ export interface ItemRequest {
   sort?: string;
   direction?: "asc" | "desc";
   category_ids?: string;
+  price?: number;
+  price_comparision?: string;
 }
 
 export const getItems = async (
   itemRequest: ItemRequest
 ): Promise<ApiResponse<ItemPageable<Item>>> => {
-  const { page = 1, size = 10, sort, direction, category_ids } = itemRequest;
+  const {
+    page = 1,
+    size = 10,
+    sort,
+    direction,
+    category_ids,
+    price,
+    price_comparision,
+  } = itemRequest;
   console.log("category_ids", category_ids);
   const params = new URLSearchParams({
     page: page.toString(),
     size: size.toString(),
-    ...(sort && { sort }),
+    ...(sort && { order_by: sort }),
     ...(direction && { direction }),
+    ...(price !== undefined && {
+      price: price.toString(),
+    }),
+    ...(price_comparision && { price_comparision }),
+
     ...(category_ids !== undefined && {
       category_ids: category_ids.toString(),
     }),

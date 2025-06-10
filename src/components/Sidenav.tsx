@@ -16,8 +16,8 @@ const Sidenav: React.FC = () => {
               to="/home"
               className={({ isActive }) =>
                 isActive
-                  ? "text-blue-500 border-b-2 border-blue-500"
-                  : "hover:text-blue-500"
+                  ? "text-yellow-500 border-b-2 border-yellow-500"
+                  : "hover:text-yellow-500"
               }
             >
               Home
@@ -28,8 +28,8 @@ const Sidenav: React.FC = () => {
               to="/product"
               className={({ isActive }) =>
                 isActive
-                  ? "text-blue-500 border-b-2 border-blue-500"
-                  : "hover:text-blue-500"
+                  ? "text-yellow-500 border-b-2 border-yellow-500"
+                  : "hover:text-yellow-500"
               }
             >
               Product
@@ -40,8 +40,8 @@ const Sidenav: React.FC = () => {
               to="/about"
               className={({ isActive }) =>
                 isActive
-                  ? "text-blue-500 border-b-2 border-blue-500"
-                  : "hover:text-blue-500"
+                  ? "text-yellow-500 border-b-2 border-yellow-500"
+                  : "hover:text-yellow-500"
               }
             >
               About
@@ -57,8 +57,8 @@ const Sidenav: React.FC = () => {
                   to="/signin"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-500 border-b-2 border-blue-500"
-                      : "hover:text-blue-500"
+                      ? "text-yellow-500 border-b-2 border-yellow-500"
+                      : "hover:text-yellow-500"
                   }
                 >
                   Sign In
@@ -67,31 +67,31 @@ const Sidenav: React.FC = () => {
             </>
           ) : (
             <>
-              <li className="p-2 flex items-center hover:text-blue-500 me-2">
+              <li className="p-2 flex items-center hover:text-yellow-500 me-2">
                 <NavLink
                   to="/favorites"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-500 border-b-2 border-blue-500"
-                      : "hover:text-blue-500"
+                      ? "text-yellow-500 border-b-2 border-yellow-500"
+                      : "hover:text-yellow-500"
                   }
                 >
                   <Heart />
                 </NavLink>
               </li>
-              <li className="p-2 flex items-center hover:text-blue-500 me-2">
+              <li className="p-2 flex items-center hover:text-yellow-500 me-2">
                 <NavLink
                   to="/cart"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-500 border-b-2 border-blue-500"
-                      : "hover:text-blue-500"
+                      ? "text-yellow-500 border-b-2 border-yellow-500"
+                      : "hover:text-yellow-500"
                   }
                 >
                   <ShoppingCart />
                 </NavLink>
               </li>
-              <li className="p-2 flex items-center hover:text-blue-500 me-2">
+              <li className="p-2 flex items-center hover:text-yellow-500 me-2">
                 <Dropdowns />
               </li>
             </>

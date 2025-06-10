@@ -12,6 +12,8 @@ import {
 import { useGetItem } from "../../../hooks/useItem";
 import { Spinner } from "../../../components/Spiner";
 import type { Image } from "../../../api/itemApi";
+import { useGetReviews } from "../../../hooks/useReview";
+import { formatDate } from "../../../helpers/datetime";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -19,6 +21,9 @@ const ProductDetailPage = () => {
   const [images, setImages] = useState<Image[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { data, isLoading, isSuccess } = useGetItem(Number(id));
+  const { data: reviews, isLoading: isLoadingReviews } = useGetReviews(
+    Number(id)
+  );
 
   useEffect(() => {
     if (isSuccess && data?.data?.images) {
@@ -66,7 +71,7 @@ const ProductDetailPage = () => {
             {/* Main image section with navigation controls */}
             <div
               id="main-img"
-              className="w-full md:w-2/3 rounded-md flex flex-row gap-1 items-center"
+              className="w-full md:w-2/3 rounded-md flex flex-row gap-1 items-center border border-slate-200 justify-center p-3 relative"
             >
               <div
                 onClick={handlePrevImage}
@@ -85,13 +90,21 @@ const ProductDetailPage = () => {
               >
                 <ChevronRight className="w-[20px] h-[50px]" />
               </div>
+              <div className="absolute bottom-1 right-1/2">
+                <span className="text-black font-semibold">
+                  {currentImageIndex + 1}/{images.length}
+                </span>
+              </div>
             </div>
 
             {/* Thumbnails section */}
-            <div className="md:h-[400px] w-full md:w-1/3 flex items-end">
+            <div className="md:h-[400px] w-full md:w-1/3 flex flex-col items-start">
+              <span className="w-full text-center text-gray-600">
+                Product Images
+              </span>
               <div
                 id="others-img"
-                className=" flex flex-row md:flex-row flex-wrap-reverse gap-2 justify-start "
+                className=" flex flex-row md:flex-row flex-wrap gap-2 justify-start "
               >
                 {data?.data?.images.map((image, index) => (
                   <img
@@ -165,8 +178,57 @@ const ProductDetailPage = () => {
               }}
             />
           </div>
-          <div className="flex flex-col justify-start border-t border-slate-200">
-            <div>review</div>
+          <div className="flex flex-col justify-start  border-slate-200">
+            <p className="text-start font-medium">Recent Reviews</p>
+            {isLoadingReviews ? (
+              <Spinner />
+            ) : (
+              <div className="w-full flex flex-col">
+                {reviews?.data?.map((review) => (
+                  <div className="p-4 border-t border-slate-100 rounded-md flex flex-col w-full">
+                    <div className="w-full flex flex-col">
+                      <div className="flex  justify-start">
+                        <span className="text-start font-bold text-xl">
+                          {review.fullname}
+                        </span>
+                      </div>
+                      <div className="flex  justify-start">
+                        <span className="text-start text-sm">
+                          {new Date(
+                            formatDate(review.last_modified_at) ?? ""
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col w-full">
+                      <div className="flex justify-start items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={15}
+                            className={`cursor-pointer ${
+                              star <= review.rating
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300"
+                            }`}
+                          />
+                        ))}
+                        <span className="ml-2 text-light">{review.rating}</span>
+                      </div>
+                      <div>
+                        <p className="text-start text-gray-700 italic">
+                          {review.content}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}
