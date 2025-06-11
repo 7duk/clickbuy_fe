@@ -1,8 +1,8 @@
-import { ChevronDown, ChevronUp, Heart, ShoppingCart } from "lucide-react";
+import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import itemDefaultImg from "../../assets/items-default-avt/default.jpg";
 import Pagination from "../../components/Pagination";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useGetCategory } from "../../hooks/useCategory";
 import { useGetItems } from "../../hooks/useItem";
 import type { CategoryResponse } from "../../api/categoryApi";
@@ -34,7 +34,21 @@ const ProductPage = () => {
     price: price,
     price_comparision: priceType,
   }) as { isLoading: boolean; data: ApiResponse<ItemPageable<Item>> };
+  const location = useLocation();
+  const { selectedCategory } = location.state || {};
 
+  useEffect(() => {
+    if (selectedCategory) {
+      setCategoryId(selectedCategory);
+      console.log("Category ID set to:", selectedCategory);
+      const checkbox = document.getElementById(
+        `category-${selectedCategory}`
+      ) as HTMLInputElement;
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    }
+  }, [selectedCategory]);
   useEffect(() => {
     if (showPrice) {
       setPrice(10000000);

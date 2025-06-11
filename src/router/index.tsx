@@ -12,6 +12,7 @@ import Footer from "../components/Footer";
 import InfoPage from "../pages/info";
 import ProductPage from "../pages/product";
 import ProductDetailPage from "../pages/product/detail";
+import CartPage from "../pages/cart";
 
 const AppRoutes = () => {
   const { isAuth, setIsAuth } = useAppContext();
@@ -45,7 +46,7 @@ const AppRoutes = () => {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/info" element={<InfoPage />} />
             <Route path="/info/:id" element={<InfoPage />} />
-            <Route path="/cart" element={<div>Cart</div>} />
+            <Route path="/cart" element={<CartPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
 

@@ -85,7 +85,8 @@ const HomePage = () => {
             {categories?.data?.slice(0, 6).map((category) => (
               <Link
                 key={category.category_id}
-                to={`/product?category=${category.category_id}`}
+                to="/product"
+                state={{ selectedCategory: category.category_id }}
                 className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 flex flex-col items-center justify-center aspect-square"
               >
                 <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-3">
