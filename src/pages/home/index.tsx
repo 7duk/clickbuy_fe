@@ -31,16 +31,16 @@ const HomePage = () => {
   return (
     <div className="flex flex-col w-full bg-white">
       {/* Banner Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-900 text-white py-16">
+      <div className="bg-gradient-to-r from-yellow-200 to-red-900 text-white py-16">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Latest Tech 2025
+            <h2 className="text-2xl md:text-3xl font-bold mb-4 text-gray-500">
+              Discover the Latest Tech Devices
             </h2>
 
             <Link
               to="/product"
-              className="inline-block bg-white text-blue-600 hover:bg-gray-100 py-3 px-8 rounded-md font-medium transition duration-300"
+              className="inline-block bg-white text-red-600 hover:bg-gray-100 py-3 px-8 rounded-md font-medium transition duration-300"
             >
               Shop Now
             </Link>
@@ -67,7 +67,7 @@ const HomePage = () => {
           />
           <Link
             to={`/product?search=${searchQuery}`}
-            className="h-12 bg-blue-600 hover:bg-blue-700 flex items-center justify-center px-6 rounded-r-md transition-colors duration-300 text-white"
+            className="h-12 bg-red-600 hover:bg-red-700 flex items-center justify-center px-6 rounded-r-md transition-colors duration-300 text-white"
           >
             <Search className="mr-2" />
             <span>Search</span>
@@ -135,7 +135,7 @@ const HomePage = () => {
                     alt={item.item_name}
                     className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded">
+                  <div className="absolute top-2 left-2 bg-red-600 text-white text-xs font-medium px-2 py-1 rounded">
                     New
                   </div>
                 </Link>
@@ -149,7 +149,7 @@ const HomePage = () => {
                     <span className="font-bold">
                       {item.public_price.toLocaleString()} VND
                     </span>
-                    <button className="text-blue-600 hover:text-blue-800">
+                    <button className="text-red-600 hover:text-red-800">
                       <ShoppingCart size={18} />
                     </button>
                   </div>

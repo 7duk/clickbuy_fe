@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import HomePage from "../pages/home";
-import AboutPage from "../pages/about";
+import ContactPage from "../pages/contact";
 import SignIn from "../pages/signin";
 import useAppContext from "../hooks/useAppContext";
 import SignUp from "../pages/signup";
@@ -42,11 +42,10 @@ const AppRoutes = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/product" element={<ProductPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
             <Route path="/info" element={<InfoPage />} />
             <Route path="/info/:id" element={<InfoPage />} />
             <Route path="/cart" element={<div>Cart</div>} />
-            <Route path="/favorites" element={<div>Favorites</div>} />
             <Route path="*" element={<NotFound />} />
           </Route>
 

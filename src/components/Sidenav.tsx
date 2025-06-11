@@ -2,7 +2,7 @@ import Dropdowns from "./Dropdowns";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { NavLink } from "react-router-dom";
-import { Heart, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 
 const Sidenav: React.FC = () => {
   const { isAuth } = useContext(AppContext);
@@ -10,7 +10,11 @@ const Sidenav: React.FC = () => {
   return (
     <div className="text-white w-full h-full">
       <nav className="flex flex-row font-bold ">
-        <ul className="list-none grid grid-flow-col w-3/4 justify-start">
+        <ul
+          className={`list-none grid grid-flow-col w-3/4 justify-start ${
+            isAuth ? "visible" : "invisible"
+          }`}
+        >
           <li className="p-2 flex items-center me-4">
             <NavLink
               to="/home"
@@ -37,14 +41,14 @@ const Sidenav: React.FC = () => {
           </li>
           <li className="p-2 flex items-center me-4">
             <NavLink
-              to="/about"
+              to="/contact"
               className={({ isActive }) =>
                 isActive
                   ? "text-yellow-500 border-b-2 border-yellow-500"
                   : "hover:text-yellow-500"
               }
             >
-              About
+              Contact
             </NavLink>
           </li>
         </ul>
@@ -67,18 +71,6 @@ const Sidenav: React.FC = () => {
             </>
           ) : (
             <>
-              <li className="p-2 flex items-center hover:text-yellow-500 me-2">
-                <NavLink
-                  to="/favorites"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-yellow-500 border-b-2 border-yellow-500"
-                      : "hover:text-yellow-500"
-                  }
-                >
-                  <Heart />
-                </NavLink>
-              </li>
               <li className="p-2 flex items-center hover:text-yellow-500 me-2">
                 <NavLink
                   to="/cart"

@@ -266,11 +266,8 @@ const ProductPage = () => {
                       alt={item.item_name}
                       className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-2 right-2  text-white text-xs font-medium px-2 py-1  flex flex-row gap-2">
-                      <div className="cursor-pointer p-2 rounded-full bg-gray-500 hover:bg-gray-100 hover:text-gray-800">
-                        <Heart />
-                      </div>
-                      <div className="cursor-pointer p-2 rounded-full bg-gray-500 hover:bg-gray-100 hover:text-gray-800">
+                    <div className="absolute top-1 right-1  text-white text-xs font-medium px-2 py-1  flex flex-row gap-2">
+                      <div className="cursor-pointer p-2 rounded-full bg-gray-100 hover:text-red-700 text-red-600">
                         <ShoppingCart />
                       </div>
                     </div>
@@ -280,7 +277,7 @@ const ProductPage = () => {
                       to={`/product/${item.id}`}
                       className="block flex-grow"
                     >
-                      <h3 className="font-medium text-gray-800 hover:text-blue-600 transition-colors line-clamp-2 mb-2">
+                      <h3 className="font-medium text-gray-800 hover:text-red-600 transition-colors line-clamp-2 mb-2">
                         {item.item_name}
                       </h3>
                     </Link>
