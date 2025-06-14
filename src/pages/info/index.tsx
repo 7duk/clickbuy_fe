@@ -113,7 +113,7 @@ const InfoPage = () => {
   return isPending ? (
     <Spinner />
   ) : (
-    <div className="flex flex-col items-center h-screen bg-gray-100 pt-6">
+    <div className="flex flex-col items-center h-screen bg-gray-100 sm:py-6">
       <Modal
         isOpen={isModalEditOpen}
         onClose={handleCloseModalEdit}
@@ -302,7 +302,7 @@ const InfoPage = () => {
       </Modal>
       {userInfo ? (
         <div
-          className={`bg-white px-6 rounded-lg shadow-md w-3/5 transition-all duration-300 ${
+          className={`bg-white px-6 rounded-lg shadow-md  w-full sm:w-3/5 transition-all duration-300 ${
             isModalEditOpen ? "blur-[1px] opacity-60 pointer-events-none" : ""
           }`}
         >

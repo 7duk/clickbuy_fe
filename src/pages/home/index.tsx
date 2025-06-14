@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAppContext from "../../hooks/useAppContext";
-import { Search, ChevronRight, ShoppingCart } from "lucide-react";
+import { Search, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useGetItems } from "../../hooks/useItem";
 import { useGetCategory } from "../../hooks/useCategory";
@@ -146,13 +146,10 @@ const HomePage = () => {
                       {item.item_name}
                     </h3>
                   </Link>
-                  <div className="flex justify-between items-center mt-auto">
+                  <div className="flex justify-center items-center mt-auto">
                     <span className="font-bold">
                       {item.public_price.toLocaleString()} VND
                     </span>
-                    <button className="text-red-600 hover:text-red-800">
-                      <ShoppingCart size={18} />
-                    </button>
                   </div>
                 </div>
               </div>

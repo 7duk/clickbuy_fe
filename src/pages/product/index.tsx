@@ -9,6 +9,8 @@ import type { CategoryResponse } from "../../api/categoryApi";
 import type { Item, ItemPageable } from "../../api/itemApi";
 import type { ApiResponse } from "../../helpers/data";
 import { Spinner } from "../../components/Spiner";
+import { useAddItemInCart } from "../../hooks/useCart";
+import useAppContext from "../../hooks/useAppContext";
 
 const ProductPage = () => {
   const [price, setPrice] = useState<number | undefined>(undefined);
@@ -37,6 +39,20 @@ const ProductPage = () => {
   const location = useLocation();
   const { selectedCategory } = location.state || {};
 
+  const { setCurrentItemsInCart } = useAppContext();
+  const { mutate, isSuccess } = useAddItemInCart();
+
+  const handleAddItemInCart = (itemId: number) => {
+    mutate({ itemId: itemId, quantity: 1 });
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      setCurrentItemsInCart((prev) => prev + 1);
+      console.log("Item added to cart successfully");
+    }
+  }, [isSuccess]);
+
   useEffect(() => {
     if (selectedCategory) {
       setCategoryId(selectedCategory);
@@ -58,6 +74,31 @@ const ProductPage = () => {
       setPriceType(undefined);
     }
   }, [showPrice]);
+
+  useEffect(() => {
+    // Function to check screen size and update state
+    const handleResize = () => {
+      if (window.innerWidth > 640) {
+        setShowCategories(true);
+        setShowSort(true);
+      } else {
+        setShowCategories(false);
+        setShowSort(false);
+      }
+    };
+
+    // Call the function initially
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row items-start justify-start h-screen overflow-y-auto">
       <div className="flex flex-col h-auto w-full md:w-1/5 items-center justify-start p-2 md:h-full">
@@ -281,8 +322,15 @@ const ProductPage = () => {
                       className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-1 right-1  text-white text-xs font-medium px-2 py-1  flex flex-row gap-2">
-                      <div className="cursor-pointer p-2 rounded-full bg-gray-100 hover:text-red-700 text-red-600">
-                        <ShoppingCart />
+                      <div className="cursor-pointer p-2 rounded-full  w-[40px] h-[40px] hover:text-red-700  bg-slate-100 hover:bg-slate-200 text-red-600">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleAddItemInCart(item.id);
+                          }}
+                        >
+                          <ShoppingCart />
+                        </button>
                       </div>
                     </div>
                   </Link>

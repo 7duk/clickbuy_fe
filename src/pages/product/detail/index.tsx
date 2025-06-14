@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   ChevronLeft,
   ChevronRight,
-  Heart,
   ShoppingCart,
   Star,
 } from "lucide-react";
@@ -14,6 +13,8 @@ import { Spinner } from "../../../components/Spiner";
 import type { Image } from "../../../api/itemApi";
 import { useGetReviews } from "../../../hooks/useReview";
 import { formatDate } from "../../../helpers/datetime";
+import { useAddItemInCart } from "../../../hooks/useCart";
+import useAppContext from "../../../hooks/useAppContext";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -24,6 +25,17 @@ const ProductDetailPage = () => {
   const { data: reviews, isLoading: isLoadingReviews } = useGetReviews(
     Number(id)
   );
+  const { mutate, isSuccess: isAddItemSuccess } = useAddItemInCart();
+  const { setCurrentItemsInCart } = useAppContext();
+  const handleAddItemInCart = (itemId: number) => {
+    mutate({ itemId: itemId, quantity: 1 });
+  };
+
+  useEffect(() => {
+    if (isAddItemSuccess) {
+      setCurrentItemsInCart((prev) => prev + 1);
+    }
+  }, [isAddItemSuccess]);
 
   useEffect(() => {
     if (isSuccess && data?.data?.images) {
@@ -160,14 +172,18 @@ const ProductDetailPage = () => {
               </div>
             </div>
             <div className="flex flex-col gap-3 w-full md:w-1/3">
-              <div className="inline-flex gap-2 bg-slate-600  py-2 items-center justify-center rounded cursor-pointer text-white w-full hover:text-red-500 hover:fill-red-500">
-                <span>Add to favorites</span>
-                <Heart />
-              </div>
-              <div className="inline-flex gap-2 bg-blue-600 py-2 items-center justify-center rounded cursor-pointer text-white w-full hover:text-black hover:fill-black">
+              <button
+                className="inline-flex gap-2 bg-blue-600 py-2 items-center justify-center rounded cursor-pointer text-white w-full hover:text-black hover:fill-black"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (typeof data?.data?.id === "number") {
+                    handleAddItemInCart(data.data.id);
+                  }
+                }}
+              >
                 <span>Add to cart</span>
                 <ShoppingCart />
-              </div>
+              </button>
             </div>
           </div>
           <div id="product-description" className="py-4">

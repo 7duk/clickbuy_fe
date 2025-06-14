@@ -3,9 +3,13 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
+import useAppContext from "../hooks/useAppContext";
 
 const Sidenav: React.FC = () => {
   const { isAuth } = useContext(AppContext);
+  const { currentItemsInCart } = useAppContext();
+
+  
 
   return (
     <div className="text-white w-full h-full">
@@ -71,7 +75,7 @@ const Sidenav: React.FC = () => {
             </>
           ) : (
             <>
-              <li className="p-2 flex items-center hover:text-yellow-500 me-2">
+              <li className="p-2 flex items-center hover:text-yellow-500 relative">
                 <NavLink
                   to="/cart"
                   className={({ isActive }) =>
@@ -81,6 +85,9 @@ const Sidenav: React.FC = () => {
                   }
                 >
                   <ShoppingCart />
+                  <p className="absolute top-0 left-[17px] text-yellow-500 text-xs">
+                    {currentItemsInCart}
+                  </p>
                 </NavLink>
               </li>
               <li className="p-2 flex items-center hover:text-yellow-500 me-2">

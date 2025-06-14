@@ -29,7 +29,7 @@ const Modal: React.FC<ModalProps> = ({ children, isOpen, onClose }) => {
       <div className="absolute inset-0 bg-opacity-90 backdrop-blur-[3px]"></div>
       <div
         ref={modalRef}
-        className="bg-white p-6 rounded-lg shadow-lg w-3/5 z-10 border border-slate-200 flex flex-col justify-between"
+        className="bg-white p-6 rounded-lg shadow-lg w-5/6 sm:w-3/5 z-10 border border-slate-200 flex flex-col justify-between"
       >
         {children}
       </div>
