@@ -38,3 +38,18 @@ export const logout = async (): Promise<ApiResponse<null>> => {
   );
   return response.data;
 };
+
+export const refreshToken = async (
+  accessToken: string
+): Promise<ApiResponse<LoginResponse>> => {
+  const response = await axiosClient.post<ApiResponse<LoginResponse>>(
+    `/auth/refresh-token`,
+    {
+      access_token: accessToken,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+  return response.data;
+};

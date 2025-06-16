@@ -10,11 +10,12 @@ import {
 } from "lucide-react";
 import { useGetItem } from "../../../hooks/useItem";
 import { Spinner } from "../../../components/Spiner";
-import type { Image } from "../../../api/itemApi";
+import type { Image, Item } from "../../../api/itemApi";
 import { useGetReviews } from "../../../hooks/useReview";
 import { formatDate } from "../../../helpers/datetime";
 import { useAddItemInCart } from "../../../hooks/useCart";
 import useAppContext from "../../../hooks/useAppContext";
+import { toast } from "react-toastify";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -27,13 +28,33 @@ const ProductDetailPage = () => {
   );
   const { mutate, isSuccess: isAddItemSuccess } = useAddItemInCart();
   const { setCurrentItemsInCart } = useAppContext();
-  const handleAddItemInCart = (itemId: number) => {
-    mutate({ itemId: itemId, quantity: 1 });
+  const [itemNameAddCart, setItemNameAddCart] = useState("");
+  const handleAddItemInCart = (item:Item) => {
+    mutate({ itemId: item.id, quantity: 1 });
+    setItemNameAddCart(item.item_name || "Unknown Item");
   };
 
   useEffect(() => {
     if (isAddItemSuccess) {
       setCurrentItemsInCart((prev) => prev + 1);
+      toast.success(`Added ${itemNameAddCart} to cart`, {
+        position: "bottom-right",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#60a5fa",
+          color: "white",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(96, 165, 250, 0.25)",
+          padding: "12px 16px",
+          fontWeight: "500",
+        },
+        icon: <ShoppingCart color="white" size={18} />,
+      });
     }
   }, [isAddItemSuccess]);
 
@@ -177,7 +198,7 @@ const ProductDetailPage = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   if (typeof data?.data?.id === "number") {
-                    handleAddItemInCart(data.data.id);
+                    handleAddItemInCart(data.data);
                   }
                 }}
               >

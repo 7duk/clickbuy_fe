@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { useAccountInfo } from "../../hooks/useAccount";
+import {
+  useAccountInfo,
+  useChangePassword,
+  useUpdateUserInfo,
+} from "../../hooks/useAccount";
 import { toast } from "react-toastify";
 import { useParams, useSearchParams } from "react-router-dom";
 import type { AccountResponse } from "../../api/accountApi";
@@ -23,11 +27,18 @@ const InfoPage = () => {
     oldPassword: false,
     newPassword: false,
     confirmPassword: false,
+    samePassword: false,
   });
 
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullname, setFullname] = useState(userInfo?.fullname || "");
+
+  const { mutate: updateUserInfo } = useUpdateUserInfo();
+  const { mutate: changePassword } = useChangePassword();
+  const [isReloadInfo, setIsReloadInfo] = useState(false);
+
   useEffect(() => {
     // Only show validation error if both fields have content
     // This prevents errors showing when the modal first opens
@@ -58,6 +69,7 @@ const InfoPage = () => {
       oldPassword: false,
       newPassword: false,
       confirmPassword: false,
+      samePassword: false,
     });
     setIsModalChangePasswordOpen(true);
   };
@@ -74,6 +86,7 @@ const InfoPage = () => {
       oldPassword: false,
       newPassword: false,
       confirmPassword: false,
+      samePassword: false,
     });
   };
 
@@ -82,11 +95,12 @@ const InfoPage = () => {
       oldPassword: oldPassword.length === 0,
       newPassword: newPassword.length === 0,
       confirmPassword: confirmPassword.length === 0,
+      samePassword: oldPassword === newPassword && newPassword.length > 0,
     };
 
     setErrors(newErrors);
 
-    // Form is valid if there are no errors and passwords match
+    // Form is valid if there are no errors, passwords match and new password is different from old
     return (
       !Object.values(newErrors).some((error) => error) && isValidConfirmPassword
     );
@@ -100,6 +114,7 @@ const InfoPage = () => {
           console.log("User information loaded successfully:", response);
           if (response && response.data) {
             setUserInfo(response.data);
+            setFullname(response.data.fullname || "");
           } else {
             toast.error("Failed to load user information");
           }
@@ -108,7 +123,7 @@ const InfoPage = () => {
     } else {
       toast.error("No ID provided in the URL");
     }
-  }, [pathId, queryId, mutate]);
+  }, [pathId, queryId, mutate, isReloadInfo]);
 
   return isPending ? (
     <Spinner />
@@ -130,7 +145,8 @@ const InfoPage = () => {
             </label>
             <input
               type="text"
-              defaultValue={userInfo?.fullname || ""}
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -168,7 +184,18 @@ const InfoPage = () => {
           <button
             onClick={() => {
               // Handle form submission
-              handleCloseModalEdit();
+              updateUserInfo(
+                {
+                  id: Number.parseInt(userInfo?.id ?? "0"),
+                  fullname: fullname,
+                },
+                {
+                  onSuccess: () => {
+                    setIsReloadInfo((prev) => !prev);
+                    handleCloseModalEdit();
+                  },
+                }
+              );
             }}
             className="px-3 py-1 rounded bg-blue-400 hover:bg-blue-600"
           >
@@ -197,7 +224,13 @@ const InfoPage = () => {
                 onChange={(e) => {
                   setOldPassword(e.target.value);
                   if (e.target.value.length > 0) {
-                    setErrors((prev) => ({ ...prev, oldPassword: false }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      oldPassword: false,
+                      samePassword:
+                        e.target.value === newPassword &&
+                        newPassword.length > 0,
+                    }));
                   }
                 }}
                 className={`w-full px-3 py-2 border ${
@@ -224,11 +257,17 @@ const InfoPage = () => {
                 onChange={(e) => {
                   setNewPassword(e.target.value);
                   if (e.target.value.length > 0) {
-                    setErrors((prev) => ({ ...prev, newPassword: false }));
+                    setErrors((prev) => ({
+                      ...prev,
+                      newPassword: false,
+                      samePassword:
+                        e.target.value === oldPassword &&
+                        e.target.value.length > 0,
+                    }));
                   }
                 }}
                 className={`w-full px-3 py-2 border ${
-                  errors.newPassword && isFormSubmitted
+                  (errors.newPassword || errors.samePassword) && isFormSubmitted
                     ? "border-red-500"
                     : "border-gray-300"
                 } rounded focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -236,6 +275,11 @@ const InfoPage = () => {
               {errors.newPassword && isFormSubmitted && (
                 <span className="text-start text-sm text-red-400 mt-1">
                   New password is required.
+                </span>
+              )}
+              {!errors.newPassword && errors.samePassword && (
+                <span className="text-start text-sm text-red-400 mt-1">
+                  New password must be different from old password.
                 </span>
               )}
             </div>
@@ -290,7 +334,11 @@ const InfoPage = () => {
               setIsFormSubmitted(true);
               if (validateForm()) {
                 // Continue with API call or whatever is needed
-                toast.success("Password changed successfully!");
+                changePassword({
+                  id: Number.parseInt(userInfo?.id ?? "0"),
+                  oldPassword,
+                  newPassword,
+                });
                 handleCloseModalChangePassword();
               }
             }}

@@ -18,6 +18,7 @@ export const useLogin = () => {
     mutationFn: login,
     onError: (error) => {
       const apiError = error as AxiosError<ApiResponse<LoginResponse>>;
+      console.log("Login error:", apiError);
       if (apiError.response) {
         const errorMessage = apiError.response.data.message;
         toast.error(errorMessage || "login failed");
@@ -26,7 +27,6 @@ export const useLogin = () => {
       }
     },
     onSuccess: (data) => {
-      toast.success(data.message || "login successful");
       localStorage.setItem("access_token", data.data?.access_token || "");
       localStorage.setItem("user_id", data.data?.id || "");
       setIsAuth(true);

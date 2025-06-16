@@ -11,6 +11,7 @@ import type { ApiResponse } from "../../helpers/data";
 import { Spinner } from "../../components/Spiner";
 import { useAddItemInCart } from "../../hooks/useCart";
 import useAppContext from "../../hooks/useAppContext";
+import { toast } from "react-toastify";
 
 const ProductPage = () => {
   const [price, setPrice] = useState<number | undefined>(undefined);
@@ -41,17 +42,41 @@ const ProductPage = () => {
 
   const { setCurrentItemsInCart } = useAppContext();
   const { mutate, isSuccess } = useAddItemInCart();
+  const [itemNameAddCart, setItemNameAddCart] = useState<string | undefined>(
+    undefined
+  );
 
-  const handleAddItemInCart = (itemId: number) => {
-    mutate({ itemId: itemId, quantity: 1 });
+  const handleAddItemInCart = (item: Item) => {
+    if (item) {
+      setItemNameAddCart(item.item_name);
+      mutate({ itemId: item.id, quantity: 1 });
+    }
   };
 
   useEffect(() => {
     if (isSuccess) {
       setCurrentItemsInCart((prev) => prev + 1);
       console.log("Item added to cart successfully");
+      toast.success(`Added ${itemNameAddCart} to cart`, {
+        position: "bottom-right",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#60a5fa",
+          color: "white",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(96, 165, 250, 0.25)",
+          padding: "12px 16px",
+          fontWeight: "500",
+        },
+        icon: <ShoppingCart color="white" size={18} />,
+      });
     }
-  }, [isSuccess]);
+  }, [isSuccess, setCurrentItemsInCart]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -322,16 +347,17 @@ const ProductPage = () => {
                       className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute top-1 right-1  text-white text-xs font-medium px-2 py-1  flex flex-row gap-2">
-                      <div className="cursor-pointer p-2 rounded-full  w-[40px] h-[40px] hover:text-red-700  bg-slate-100 hover:bg-slate-200 text-red-600">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleAddItemInCart(item.id);
-                          }}
-                        >
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAddItemInCart(item);
+                        }}
+                      >
+                        {" "}
+                        <div className="cursor-pointer p-2 rounded-full  w-[40px] h-[40px] hover:text-red-700  bg-slate-100 hover:bg-slate-200 text-red-600">
                           <ShoppingCart />
-                        </button>
-                      </div>
+                        </div>
+                      </button>
                     </div>
                   </Link>
                   <div className="p-4 flex flex-col flex-grow">

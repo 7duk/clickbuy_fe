@@ -19,3 +19,17 @@ export const getAccountInfo = async (
   });
   return response.data;
 };
+
+
+export const updateAccountInfo = async (id: number, fullname: string): Promise<ApiResponse<null>> => {
+  const response = await axiosClient.put(`/account/${id}/edit-profile`, {fullname: fullname});
+  return response.data;
+}
+
+export const changePassword= async (id: number, oldPassword: string, newPassword: string): Promise<ApiResponse<null>> => {
+  const response = await axiosClient.put(`/account/${id}/change-password`, {
+    old_password: oldPassword,
+    new_password: newPassword,
+  });
+  return response.data;
+}
